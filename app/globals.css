@@ -1,0 +1,82 @@
+@import "tailwindcss";
+
+@theme {
+  /* Greys — mirrored from the Webflow "Base collection" variables */
+  --color-g1: #f0f4f8;
+  --color-g2: #bac8d2;
+  --color-g3: #879ca9;
+  --color-g4: #6d7086;
+  --color-g5: #151520;
+  --color-g6: #0c0c13;
+
+  /* Brand */
+  --color-blue: #2d8dff;
+  --color-blue-minus: #1976e4;
+  --color-blue-plus: #97c7ff;
+  --color-ai: #c745ff;
+
+  /* Semantic aliases used across the site */
+  --color-background: var(--color-g6);
+  --color-surface: var(--color-g5);
+  --color-body: var(--color-g2);
+  --color-detail: var(--color-g4);
+
+  --font-sans: var(--font-rethink-sans), ui-sans-serif, system-ui, sans-serif;
+
+  --container-site: 1500px;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-g6);
+    color: var(--color-g2);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    background-color: var(--color-blue);
+    color: #fff;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-blue-plus);
+    outline-offset: 3px;
+  }
+}
+
+@layer components {
+  /* Gradient headline treatment used by .display-1 / .display-2 in Webflow */
+  .display-gradient {
+    background-image: linear-gradient(90deg, #fff, #ffffff80);
+    -webkit-text-fill-color: transparent;
+    -webkit-background-clip: text;
+    background-clip: text;
+  }
+
+  /* Hairline inner ring Webflow draws with inset box-shadows */
+  .ring-hairline {
+    box-shadow: inset 0 0 0 1px #ffffff12;
+  }
+
+  .ring-hairline-blue {
+    box-shadow: inset 0 0 0 1px #acddff1f;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
