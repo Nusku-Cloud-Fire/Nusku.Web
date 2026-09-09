@@ -99,14 +99,16 @@ export function Display4({
   children: ReactNode;
 }) {
   return (
-    <Tag className={`text-[22px] leading-[1.2] font-medium text-white ${className}`}>
+    <Tag
+      className={`text-[22px] leading-[1.2] font-medium text-white ${className}`}
+    >
       {children}
     </Tag>
   );
 }
 
 const buttonClasses =
-  "inline-flex items-center justify-center rounded-md bg-gradient-to-b from-blue to-blue-minus px-6 py-4 font-medium text-white shadow-[0_0_24px_-5px_#2d8dff73] transition-[filter] duration-300 hover:brightness-110";
+  "inline-flex items-center justify-center rounded-md bg-gradient-to-b from-blue to-blue-minus px-6 py-3 font-medium text-white shadow-[0_0_24px_-5px_#2d8dff73] transition-[filter] duration-300 hover:brightness-110";
 
 export function Button({
   href,

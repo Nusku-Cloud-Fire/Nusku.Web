@@ -1,5 +1,12 @@
 import Image from "next/image";
-import { Button, Container, Display2, Display4, Section, TitleBadge } from "./ui";
+import {
+  Button,
+  Container,
+  Display2,
+  Display4,
+  Section,
+  TitleBadge,
+} from "./ui";
 
 /** Closing "Programa una demo" band. Shown at the bottom of every marketing page. */
 export function DemoCtaSection() {
@@ -18,8 +25,8 @@ export function DemoCtaSection() {
           <TitleBadge>Realiza una demo</TitleBadge>
           <Display2>¿Te enseñamos de qué es capaz la plataforma?</Display2>
           <p className="text-lg text-body">
-            Agenda una demostración y compártenos tus requerimientos para evaluar
-            cómo podemos asistirte.
+            Agenda una demostración y compártenos tus requerimientos para
+            evaluar cómo podemos asistirte.
           </p>
           <Button href="/contacta" className="mt-2">
             Programa una demo
@@ -50,12 +57,14 @@ export function SupportSection() {
       <Container>
         <div className="mx-auto flex max-w-3xl flex-col items-center gap-6 text-center">
           <TitleBadge>Soporte técnico</TitleBadge>
-          <Display2>Un soporte técnico gestionado por ingenieros expertos</Display2>
+          <Display2>
+            Un soporte técnico gestionado por ingenieros expertos
+          </Display2>
           <p className="text-lg text-body">
-            Contar con ingenieros en el soporte técnico garantiza una atención más
-            especializada y eficiente. Ellos pueden diagnosticar problemas
-            complejos rápidamente y ofrecer soluciones efectivas, lo que reduce el
-            tiempo de inactividad. Además, su experiencia permite una mejor
+            Contar con ingenieros en el soporte técnico garantiza una atención
+            más especializada y eficiente. Ellos pueden diagnosticar problemas
+            complejos rápidamente y ofrecer soluciones efectivas, lo que reduce
+            el tiempo de inactividad. Además, su experiencia permite una mejor
             comprensión de los sistemas, lo que se traduce en un servicio más
             proactivo y preventivo.
           </p>
@@ -115,18 +124,19 @@ export function CloudSection() {
                 width={420}
                 height={280}
                 aria-hidden="true"
-                className="h-auto w-full max-w-sm"
+                className="mx-auto h-auto w-full max-w-sm"
               />
               <Display4 as="h3">
                 Por qué es importante el Cloud en la seguridad de hoy en día
               </Display4>
               <p className="text-body">
-                En la era digital, almacenar datos en la nube se ha convertido en
-                una práctica común y conveniente. Sin embargo, la seguridad de esos
-                datos es una preocupación fundamental para muchos usuarios.
-                Afortunadamente, con la plataforma de NUSKU las soluciones de
-                almacenamiento e interacción en la nube ofrecen múltiples capas de
-                protección para garantizar que tu información y datos estén a salvo.
+                En la era digital, almacenar datos en la nube se ha convertido
+                en una práctica común y conveniente. Sin embargo, la seguridad
+                de esos datos es una preocupación fundamental para muchos
+                usuarios. Afortunadamente, con la plataforma de NUSKU las
+                soluciones de almacenamiento e interacción en la nube ofrecen
+                múltiples capas de protección para garantizar que tu información
+                y datos estén a salvo.
               </p>
             </div>
           </div>
@@ -134,8 +144,8 @@ export function CloudSection() {
           <div>
             <Display2>Tus datos siempre protegidos</Display2>
             <p className="mt-6 text-lg text-body">
-              Agenda una demostración y compártenos tus requerimientos para evaluar
-              cómo podemos asistirte.
+              Agenda una demostración y compártenos tus requerimientos para
+              evaluar cómo podemos asistirte.
             </p>
             <ul className="mt-10 flex flex-col gap-6">
               {cloudFeatures.map((feature, index) => (
@@ -150,7 +160,9 @@ export function CloudSection() {
                       className="h-5 w-5"
                     />
                   </span>
-                  <span className="font-medium text-white">{feature.label}</span>
+                  <span className="font-medium text-white">
+                    {feature.label}
+                  </span>
                 </li>
               ))}
             </ul>

@@ -47,15 +47,17 @@ export function ProfileHero({
               {ctaLabel}
             </Button>
           </div>
-          <Image
-            src={visual}
-            alt={visualAlt}
-            width={900}
-            height={700}
-            priority
-            sizes="(max-width: 1024px) 100vw, 750px"
-            className={`h-auto w-full ${visualClassName}`}
-          />
+          <div className="-mx-[12vw] lg:-mr-[10vw] lg:ml-0 lg:w-[calc(100%+10vw)]">
+            <Image
+              src={visual}
+              alt={visualAlt}
+              width={900}
+              height={700}
+              priority
+              sizes="(max-width: 1024px) 124vw, 60vw"
+              className={`h-auto w-full ${visualClassName}`}
+            />
+          </div>
         </div>
       </Container>
     </section>
@@ -106,9 +108,7 @@ export function ProfileSection({
           </div>
         ) : null}
 
-        <div
-          className={`grid gap-10 sm:grid-cols-2 xl:grid-cols-4 ${title ? "mt-16" : ""}`}
-        >
+        <div className={`grid gap-10 sm:grid-cols-2 ${title ? "mt-16" : ""}`}>
           {cards.map((card) => (
             <ProfileFeatureCard key={card.title} card={card} />
           ))}
@@ -123,8 +123,16 @@ export function AiHighlightSection() {
   return (
     <Section className="!pt-0">
       <Container>
-        <div className="ring-hairline grid items-center gap-10 overflow-hidden rounded-2xl bg-surface p-10 lg:grid-cols-2 lg:p-14">
-          <div className="flex flex-col items-start gap-5">
+        <div className="ring-hairline relative overflow-hidden rounded-2xl bg-surface">
+          <Image
+            src="/images/ilus-a3-5.avif"
+            alt="Operaciones automatizadas por la inteligencia artificial de Nusku"
+            width={1290}
+            height={778}
+            sizes="(max-width: 1024px) 100vw, 50vw"
+            className="h-auto w-full lg:absolute lg:top-0 lg:right-0 lg:w-1/2"
+          />
+          <div className="flex flex-col items-start gap-5 px-10 py-14 lg:w-1/2 lg:px-14 lg:py-20">
             <SoonBadge />
             <Display2 as="h3">Operaciones automatizadas por la I.A.</Display2>
             <p className="text-lg text-body">
@@ -133,14 +141,6 @@ export function AiHighlightSection() {
               instalación y gestión.
             </p>
           </div>
-          <Image
-            src="/images/ilus-a3-5.avif"
-            alt="Operaciones automatizadas por la inteligencia artificial de Nusku"
-            width={800}
-            height={600}
-            sizes="(max-width: 1024px) 100vw, 600px"
-            className="h-auto w-full"
-          />
         </div>
       </Container>
     </Section>
@@ -157,8 +157,8 @@ export function PlanimetriaSection() {
             <Display2 as="h3">Planimetría de emergencias</Display2>
             <p className="text-lg text-body">
               Es posible consultar en la plataforma lo que está pasando en cada
-              dispositivo que está instalado y diferenciar la tipología del mismo
-              y en que estado se encuentra.
+              dispositivo que está instalado y diferenciar la tipología del
+              mismo y en que estado se encuentra.
             </p>
           </div>
           <Image

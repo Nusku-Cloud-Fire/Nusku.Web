@@ -4,10 +4,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Container } from "./ui";
+import { Button, Container } from "./ui";
 
 const navLinks = [
-  { href: "/instaladores-y-mantenedores", label: "Instaladores y mantenedores" },
+  {
+    href: "/instaladores-y-mantenedores",
+    label: "Instaladores y mantenedores",
+  },
   { href: "/receptoras", label: "Receptoras" },
   { href: "/propietarios", label: "Propietarios" },
 ];
@@ -60,12 +63,9 @@ export function SiteHeader() {
             ))}
           </nav>
 
-          <Link
-            href="/contacta"
-            className="hidden shrink-0 rounded-md bg-gradient-to-b from-blue to-blue-minus px-6 py-4 font-medium text-white shadow-[0_0_24px_-5px_#2d8dff73] transition-[filter] duration-300 hover:brightness-110 lg:inline-flex"
-          >
-            Programa una demo
-          </Link>
+          <div className="hidden shrink-0 lg:block">
+            <Button href="/contacta">Programa una demo</Button>
+          </div>
 
           <button
             type="button"
@@ -116,12 +116,9 @@ export function SiteHeader() {
                 {link.label}
               </Link>
             ))}
-            <Link
-              href="/contacta"
-              className="mt-2 rounded-md bg-gradient-to-b from-blue to-blue-minus px-6 py-4 text-center font-medium text-white"
-            >
+            <Button href="/contacta" className="mt-2">
               Programa una demo
-            </Link>
+            </Button>
           </nav>
         ) : null}
       </Container>

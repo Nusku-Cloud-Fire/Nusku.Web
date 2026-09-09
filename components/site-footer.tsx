@@ -3,7 +3,10 @@ import Link from "next/link";
 import { Container } from "./ui";
 
 const platformLinks = [
-  { href: "/instaladores-y-mantenedores", label: "Instaladores y mantenedores" },
+  {
+    href: "/instaladores-y-mantenedores",
+    label: "Instaladores y mantenedores",
+  },
   { href: "/receptoras", label: "Receptoras" },
   { href: "/propietarios", label: "Propietarios de instalación" },
 ];
@@ -12,7 +15,7 @@ export function SiteFooter() {
   return (
     <footer>
       <Container>
-        <div className="grid gap-12 py-20 md:grid-cols-2 lg:grid-cols-4 lg:gap-10">
+        <div className="flex flex-col gap-12 py-20 lg:flex-row lg:items-start lg:justify-between lg:gap-10">
           <div className="max-w-xs">
             <Image
               src="/images/logo-nusku-2025-white.svg"
@@ -27,63 +30,68 @@ export function SiteFooter() {
             </p>
           </div>
 
-          <nav aria-labelledby="footer-plataforma">
-            <h2
-              id="footer-plataforma"
-              className="text-sm font-medium text-white"
-            >
-              Plataforma
-            </h2>
-            <ul className="mt-5 space-y-3">
-              {platformLinks.map((link) => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
+          <div className="grid gap-10 sm:grid-cols-3 lg:flex lg:gap-24">
+            <nav aria-labelledby="footer-plataforma">
+              <h2
+                id="footer-plataforma"
+                className="text-sm font-medium text-white"
+              >
+                Plataforma
+              </h2>
+              <ul className="mt-5 space-y-3">
+                {platformLinks.map((link) => (
+                  <li key={link.href}>
+                    <Link
+                      href={link.href}
+                      className="text-sm text-g3 transition-colors hover:text-white"
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+
+            <nav aria-labelledby="footer-contacto">
+              <h2
+                id="footer-contacto"
+                className="text-sm font-medium text-white"
+              >
+                Contacta con nosotros
+              </h2>
+              <ul className="mt-5 space-y-3">
+                <li>
+                  <a
+                    href="mailto:info@nusku.cloud"
                     className="text-sm text-g3 transition-colors hover:text-white"
                   >
-                    {link.label}
+                    info@nusku.cloud
+                  </a>
+                </li>
+                <li>
+                  <Link
+                    href="/contacta"
+                    className="text-sm text-g3 transition-colors hover:text-white"
+                  >
+                    Formulario de contacto
                   </Link>
                 </li>
-              ))}
-            </ul>
-          </nav>
+              </ul>
+            </nav>
 
-          <nav aria-labelledby="footer-contacto">
-            <h2 id="footer-contacto" className="text-sm font-medium text-white">
-              Contacta con nosotros
-            </h2>
-            <ul className="mt-5 space-y-3">
-              <li>
-                <a
-                  href="mailto:info@nusku.cloud"
-                  className="text-sm text-g3 transition-colors hover:text-white"
-                >
-                  info@nusku.cloud
-                </a>
-              </li>
-              <li>
-                <Link
-                  href="/contacta"
-                  className="text-sm text-g3 transition-colors hover:text-white"
-                >
-                  Formulario de contacto
-                </Link>
-              </li>
-            </ul>
-          </nav>
-
-          <div>
-            <h2 className="text-sm font-medium text-white">Idioma</h2>
-            <ul className="mt-5 space-y-3">
-              <li>
-                <Link
-                  href="/"
-                  className="text-sm text-g3 transition-colors hover:text-white"
-                >
-                  Español
-                </Link>
-              </li>
-            </ul>
+            <div>
+              <h2 className="text-sm font-medium text-white">Idioma</h2>
+              <ul className="mt-5 space-y-3">
+                <li>
+                  <Link
+                    href="/"
+                    className="text-sm text-g3 transition-colors hover:text-white"
+                  >
+                    Español
+                  </Link>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       </Container>
