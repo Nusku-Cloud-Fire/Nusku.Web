@@ -11,8 +11,15 @@ const REQUIRED_FIELDS = [
 
 const PERFILES = ["Instalador", "Mantenedor", "Receptora", "Propietario"];
 
-const CONTACT_TO = process.env.CONTACT_TO_EMAIL ?? "info@nusku.cloud";
-const CONTACT_FROM = process.env.CONTACT_FROM_EMAIL ?? "web@nusku.cloud";
+// An unset var is `undefined`, but a var left blank in .env is `""` — treat
+// both as "not configured" so the defaults below still apply.
+function envOr(name: string, fallback: string) {
+  const value = process.env[name];
+  return value && value.trim() !== "" ? value.trim() : fallback;
+}
+
+const CONTACT_TO = envOr("CONTACT_TO_EMAIL", "info@nusku.cloud");
+const CONTACT_FROM = envOr("CONTACT_FROM_EMAIL", "web@nusku.cloud");
 
 function escapeHtml(value: string) {
   return value
@@ -80,29 +87,42 @@ export async function POST(request: Request) {
     ["Perfil", values.perfil],
   ];
 
-  const response = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      from: `Nusku Web <${CONTACT_FROM}>`,
-      to: [CONTACT_TO],
-      reply_to: values.email,
-      subject: `Nueva solicitud de demo — ${values.nombre} ${values.apellidos} (${values.perfil})`,
-      html: `<h2>Nueva solicitud de demo</h2><table>${rows
-        .map(
-          ([label, value]) =>
-            `<tr><td><strong>${label}</strong></td><td>${escapeHtml(value)}</td></tr>`,
-        )
-        .join("")}</table>`,
-      text: rows.map(([label, value]) => `${label}: ${value}`).join("\n"),
-    }),
-  });
+  let response: Response;
+
+  try {
+    response = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        from: `Nusku Web <${CONTACT_FROM}>`,
+        to: [CONTACT_TO],
+        reply_to: values.email,
+        subject: `Nueva solicitud de demo — ${values.nombre} ${values.apellidos} (${values.perfil})`,
+        html: `<h2>Nueva solicitud de demo</h2><table>${rows
+          .map(
+            ([label, value]) =>
+              `<tr><td><strong>${label}</strong></td><td>${escapeHtml(value)}</td></tr>`,
+          )
+          .join("")}</table>`,
+        text: rows.map(([label, value]) => `${label}: ${value}`).join("\n"),
+      }),
+    });
+  } catch (error) {
+    // Network/DNS failure reaching Resend: return the same fallback the form
+    // already handles instead of throwing an unhandled 500.
+    console.error("[contact] could not reach Resend:", error);
+    return NextResponse.json({ error: "send_failed" }, { status: 502 });
+  }
 
   if (!response.ok) {
-    console.error("[contact] Resend responded %s", response.status);
+    console.error(
+      "[contact] Resend responded %s: %s",
+      response.status,
+      await response.text().catch(() => ""),
+    );
     return NextResponse.json({ error: "send_failed" }, { status: 502 });
   }
 
