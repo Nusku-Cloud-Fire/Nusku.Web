@@ -79,12 +79,18 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "not_configured" }, { status: 500 });
   }
 
+  // The form posts the Spanish `perfil` value in both languages, so this stays
+  // consistent; `lang` only records which version of the site the lead used,
+  // so whoever replies knows to write back in English.
+  const lang = body.lang === "en" ? "en" : "es";
+
   const rows = [
     ["Nombre", `${values.nombre} ${values.apellidos}`],
     ["Email", values.email],
     ["Teléfono", values.telefono],
     ["Empresa", values.empresa],
     ["Perfil", values.perfil],
+    ["Idioma", lang === "en" ? "Inglés — responder en inglés" : "Español"],
   ];
 
   let response: Response;

@@ -7,7 +7,8 @@ Marketing site for [nusku.cloud](https://www.nusku.cloud), migrated from Webflow
 - Next.js 15 (App Router) + React 19 + TypeScript
 - Tailwind CSS v4 (design tokens in `app/globals.css`)
 - Rethink Sans via `next/font/google`
-- All pages statically prerendered; only `/api/contact` runs on demand
+- Spanish + English, no i18n library — see [Languages](#languages)
+- All pages statically prerendered; only `/api/contact` and the 404 catch-alls run on demand
 
 ## Getting started
 
@@ -19,20 +20,79 @@ npm run dev
 
 ## Routes
 
-Every published Webflow URL is preserved 1:1, so no redirects are needed at launch.
+Every published Webflow URL is preserved 1:1, so no redirects are needed at
+launch. Spanish stays at the root; English is the same pages under `/en` with
+translated slugs.
 
-| Route | Source |
-| --- | --- |
-| `/` | Home |
-| `/instaladores-y-mantenedores` | Instaladores y Mantenedores |
-| `/receptoras` | Receptoras |
-| `/propietarios` | App para Propietarios |
-| `/contacta` | Contacta con nosotros |
-| `/terminos-y-condiciones` | Términos y Condiciones |
-| `/politica-de-privacidad` | Política de privacidad |
+| Page | Spanish (default) | English |
+| --- | --- | --- |
+| Home | `/` | `/en` |
+| Instaladores y Mantenedores | `/instaladores-y-mantenedores` | `/en/installers-and-maintainers` |
+| Receptoras | `/receptoras` | `/en/alarm-receiving-centres` |
+| App para Propietarios | `/propietarios` | `/en/property-owners` |
+| Contacta con nosotros | `/contacta` | `/en/contact` |
+| Términos y Condiciones | `/terminos-y-condiciones` | `/en/terms-and-conditions` |
+| Política de privacidad | `/politica-de-privacidad` | `/en/privacy-policy` |
 
 `/contact` (referenced from the old privacy policy, and a 404 on Webflow) now
 308-redirects to `/contacta`.
+
+## Languages
+
+Spanish is the default and the source of truth. English is a full translation
+at `/en/…`; there is no machine translation at runtime and no i18n library —
+both languages are plain TypeScript objects, statically prerendered.
+
+### Where the copy lives
+
+| File | What it is |
+| --- | --- |
+| `lib/content/es.ts` | Every Spanish string, plus `SiteContent` — the type derived from it |
+| `lib/content/en.ts` | The English translation, typed as `SiteContent` |
+| `lib/i18n.ts` | The route table (which slug is which page in which language) and helpers |
+
+Because `SiteContent` is derived from the Spanish object with `typeof`, **adding
+a string to `es.ts` fails the build until `en.ts` has it too**. That is the
+whole safety net: `npm run typecheck` catches an untranslated key, so nothing
+can silently fall back to Spanish on the English site.
+
+To change copy, edit the dictionary — never the components. To add a page, add
+it to `ROUTES` in `lib/i18n.ts`, add its copy to both dictionaries, and create
+the two route files.
+
+### How the URLs work
+
+No middleware and no redirects. `app/(es)/` and `app/(en)/` are [route
+groups][groups] — bracketed folder names that organise files without adding a
+URL segment. So `app/(es)/receptoras/page.tsx` still serves `/receptoras`,
+exactly the URL it had before English existed.
+
+[groups]: https://nextjs.org/docs/app/api-reference/file-conventions/route-groups
+
+Each group has its own root layout, which is what lets `<html lang>` and the
+OpenGraph locale be correct in the *served* HTML rather than patched in the
+browser. The trade-off is that switching language is a full page load rather
+than a client-side transition — which is the right behaviour anyway, since the
+whole document changes.
+
+Because there is no single `app/layout.tsx` for Next to attach a global
+`not-found.tsx` to, each group has a `[...notFound]` catch-all so an unknown
+URL still gets the styled 404 — in Spanish for `/nope`, in English for
+`/en/nope`.
+
+### SEO
+
+Every page declares its canonical URL and `hreflang` links to its counterpart,
+with `x-default` pointing at Spanish. `sitemap.xml` lists both languages with
+`xhtml:link` alternates. Nothing auto-redirects visitors by browser language,
+so a shared link always opens in the language it was written in.
+
+### The language switcher
+
+`components/language-switcher.tsx` maps the current path to the same page in
+the other language via `counterpartPath()`, falling back to that language's
+home page if the URL is not one of ours. It appears in the header (and mobile
+menu) as an ES/EN toggle, and in the footer under *Idioma* / *Language*.
 
 ## Contact form
 
@@ -90,6 +150,13 @@ cp .env.example .env.local
 Each notification arrives with the subject *"Nueva solicitud de demo — Nombre
 Apellidos (Perfil)"* and has `Reply-To` set to the lead's own address, so
 replying from the inbox goes straight back to them.
+
+The English form at `/en/contact` posts to the same endpoint with the same
+field names and the same Spanish `Perfil` values (`Instalador`, `Mantenedor`,
+`Receptora`, `Propietario`) — only the visible labels are translated, so the
+notification reads identically whichever language the lead used. It carries one
+extra row, *Idioma*, which says **"Inglés — responder en inglés"** when the lead
+came from the English site.
 
 ### If the form reports an error
 
