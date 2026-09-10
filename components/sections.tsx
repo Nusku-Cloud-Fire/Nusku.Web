@@ -1,4 +1,6 @@
 import Image from "next/image";
+import { getContent } from "@/lib/content";
+import { path, type Lang } from "@/lib/i18n";
 import {
   Button,
   Container,
@@ -9,7 +11,9 @@ import {
 } from "./ui";
 
 /** Closing "Programa una demo" band. Shown at the bottom of every marketing page. */
-export function DemoCtaSection() {
+export function DemoCtaSection({ lang }: { lang: Lang }) {
+  const c = getContent(lang).demoCta;
+
   return (
     <section className="relative overflow-hidden py-32 md:py-48 lg:py-[269px]">
       <Image
@@ -22,14 +26,11 @@ export function DemoCtaSection() {
       />
       <Container className="relative">
         <div className="mx-auto flex max-w-2xl flex-col items-center gap-6 text-center">
-          <TitleBadge>Realiza una demo</TitleBadge>
-          <Display2>¿Te enseñamos de qué es capaz la plataforma?</Display2>
-          <p className="text-lg text-body">
-            Agenda una demostración y compártenos tus requerimientos para
-            evaluar cómo podemos asistirte.
-          </p>
-          <Button href="/contacta" className="mt-2">
-            Programa una demo
+          <TitleBadge>{c.badge}</TitleBadge>
+          <Display2>{c.title}</Display2>
+          <p className="text-lg text-body">{c.body}</p>
+          <Button href={path("contact", lang)} className="mt-2">
+            {c.cta}
           </Button>
         </div>
       </Container>
@@ -37,41 +38,21 @@ export function DemoCtaSection() {
   );
 }
 
-const supportFeatures = [
-  {
-    icon: "/images/clock.svg",
-    title: "Soporte 24/7",
-    body: "Nuestro servicio de soporte técnico 24/7 está diseñado para darle la asistencia que necesitas desde cualquier parte y con un equipo de expertos en el sector.",
-  },
-  {
-    icon: "/images/eye.svg",
-    title: "Soporte en tiempo real",
-    body: "Nuestros ingenieros pueden acceder a tu cuenta en remoto para darte soporte en tiempo real y resolver tu problema al momento.",
-  },
-];
-
 /** "Soporte técnico" block, shared by the three audience pages. */
-export function SupportSection() {
+export function SupportSection({ lang }: { lang: Lang }) {
+  const c = getContent(lang).support;
+
   return (
     <Section>
       <Container>
         <div className="mx-auto flex max-w-3xl flex-col items-center gap-6 text-center">
-          <TitleBadge>Soporte técnico</TitleBadge>
-          <Display2>
-            Un soporte técnico gestionado por ingenieros expertos
-          </Display2>
-          <p className="text-lg text-body">
-            Contar con ingenieros en el soporte técnico garantiza una atención
-            más especializada y eficiente. Ellos pueden diagnosticar problemas
-            complejos rápidamente y ofrecer soluciones efectivas, lo que reduce
-            el tiempo de inactividad. Además, su experiencia permite una mejor
-            comprensión de los sistemas, lo que se traduce en un servicio más
-            proactivo y preventivo.
-          </p>
+          <TitleBadge>{c.badge}</TitleBadge>
+          <Display2>{c.title}</Display2>
+          <p className="text-lg text-body">{c.body}</p>
         </div>
 
         <div className="mt-16 grid gap-10 md:grid-cols-2">
-          {supportFeatures.map((feature) => (
+          {c.features.map((feature) => (
             <div
               key={feature.title}
               className="ring-hairline flex flex-col gap-4 rounded-2xl bg-surface p-8"
@@ -94,24 +75,10 @@ export function SupportSection() {
   );
 }
 
-const cloudFeatures = [
-  {
-    icon: "/images/globe-01.svg",
-    label: "Arquitectura distribuida con escalabilidad sin límites",
-  },
-  {
-    icon: "/images/shield-03.svg",
-    label: "Más altos estándares de la industria en seguridad y fiabilidad",
-  },
-  // NOTE: the live Webflow site repeats the first label here. Kept verbatim.
-  {
-    icon: "/images/data.svg",
-    label: "Arquitectura distribuida con escalabilidad sin límites",
-  },
-];
+/** "Por qué es importante el Cloud" block, shared by the owners and installers pages. */
+export function CloudSection({ lang }: { lang: Lang }) {
+  const c = getContent(lang).cloud;
 
-/** "Por qué es importante el Cloud" block, shared by /propietarios and /instaladores-y-mantenedores. */
-export function CloudSection() {
   return (
     <Section>
       <Container>
@@ -126,29 +93,16 @@ export function CloudSection() {
                 aria-hidden="true"
                 className="mx-auto h-auto w-full max-w-sm"
               />
-              <Display4 as="h3">
-                Por qué es importante el Cloud en la seguridad de hoy en día
-              </Display4>
-              <p className="text-body">
-                En la era digital, almacenar datos en la nube se ha convertido
-                en una práctica común y conveniente. Sin embargo, la seguridad
-                de esos datos es una preocupación fundamental para muchos
-                usuarios. Afortunadamente, con la plataforma de NUSKU las
-                soluciones de almacenamiento e interacción en la nube ofrecen
-                múltiples capas de protección para garantizar que tu información
-                y datos estén a salvo.
-              </p>
+              <Display4 as="h3">{c.cardTitle}</Display4>
+              <p className="text-body">{c.cardBody}</p>
             </div>
           </div>
 
           <div>
-            <Display2>Tus datos siempre protegidos</Display2>
-            <p className="mt-6 text-lg text-body">
-              Agenda una demostración y compártenos tus requerimientos para
-              evaluar cómo podemos asistirte.
-            </p>
+            <Display2>{c.title}</Display2>
+            <p className="mt-6 text-lg text-body">{c.body}</p>
             <ul className="mt-10 flex flex-col gap-6">
-              {cloudFeatures.map((feature, index) => (
+              {c.features.map((feature, index) => (
                 <li key={index} className="flex items-center gap-4">
                   <span className="ring-hairline flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-white/5">
                     <Image
@@ -160,9 +114,7 @@ export function CloudSection() {
                       className="h-5 w-5"
                     />
                   </span>
-                  <span className="font-medium text-white">
-                    {feature.label}
-                  </span>
+                  <span className="font-medium text-white">{feature.label}</span>
                 </li>
               ))}
             </ul>

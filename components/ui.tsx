@@ -1,5 +1,7 @@
 import Link from "next/link";
 import type { ComponentProps, ReactNode } from "react";
+import { getContent } from "@/lib/content";
+import type { Lang } from "@/lib/i18n";
 
 export function Container({
   className = "",
@@ -41,11 +43,11 @@ export function TitleBadge({ children }: { children: ReactNode }) {
   );
 }
 
-/** Small "Próximamente" flag used on not-yet-shipped features. */
-export function SoonBadge() {
+/** Small "Próximamente" / "Coming soon" flag used on not-yet-shipped features. */
+export function SoonBadge({ lang }: { lang: Lang }) {
   return (
     <span className="inline-block rounded-full bg-ai/10 px-2.5 py-1 text-[11px] leading-none font-medium tracking-wide text-ai uppercase shadow-[inset_0_0_0_1px_#c745ff40]">
-      Próximamente
+      {getContent(lang).chrome.soon}
     </span>
   );
 }

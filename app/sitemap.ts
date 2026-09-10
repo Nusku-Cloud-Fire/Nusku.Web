@@ -1,20 +1,17 @@
 import type { MetadataRoute } from "next";
-
-const routes = [
-  "",
-  "/instaladores-y-mantenedores",
-  "/receptoras",
-  "/propietarios",
-  "/contacta",
-  "/terminos-y-condiciones",
-  "/politica-de-privacidad",
-];
+import { LANGS, ROUTE_KEYS, url } from "@/lib/i18n";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  return routes.map((route) => ({
-    url: `https://www.nusku.cloud${route}`,
-    lastModified: new Date(),
-    changeFrequency: route === "" ? "weekly" : "monthly",
-    priority: route === "" ? 1 : 0.7,
-  }));
+  return LANGS.flatMap((lang) =>
+    ROUTE_KEYS.map((key) => ({
+      url: url(key, lang),
+      lastModified: new Date(),
+      changeFrequency: key === "home" ? ("weekly" as const) : ("monthly" as const),
+      priority: key === "home" ? 1 : 0.7,
+      // Tells search engines the two language versions are the same page.
+      alternates: {
+        languages: Object.fromEntries(LANGS.map((l) => [l, url(key, l)])),
+      },
+    })),
+  );
 }

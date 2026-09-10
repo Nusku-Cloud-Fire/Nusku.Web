@@ -1,17 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
+import { getContent } from "@/lib/content";
+import { path, type Lang } from "@/lib/i18n";
+import { LanguageSwitcher } from "./language-switcher";
 import { Container } from "./ui";
 
-const platformLinks = [
-  {
-    href: "/instaladores-y-mantenedores",
-    label: "Instaladores y mantenedores",
-  },
-  { href: "/receptoras", label: "Receptoras" },
-  { href: "/propietarios", label: "Propietarios de instalación" },
-];
+export function SiteFooter({ lang }: { lang: Lang }) {
+  const c = getContent(lang).footer;
 
-export function SiteFooter() {
   return (
     <footer>
       <Container>
@@ -24,25 +20,19 @@ export function SiteFooter() {
               height={32}
               className="h-8 w-auto"
             />
-            <p className="mt-6 text-sm leading-relaxed text-g3">
-              Nusku es una plataforma Cloud que permite la gestión óptima de
-              instalaciones de detección de incendios.
-            </p>
+            <p className="mt-6 text-sm leading-relaxed text-g3">{c.tagline}</p>
           </div>
 
           <div className="grid gap-10 sm:grid-cols-3 lg:flex lg:gap-24">
-            <nav aria-labelledby="footer-plataforma">
-              <h2
-                id="footer-plataforma"
-                className="text-sm font-medium text-white"
-              >
-                Plataforma
+            <nav aria-labelledby="footer-platform">
+              <h2 id="footer-platform" className="text-sm font-medium text-white">
+                {c.platformHeading}
               </h2>
               <ul className="mt-5 space-y-3">
-                {platformLinks.map((link) => (
-                  <li key={link.href}>
+                {c.platformLinks.map((link) => (
+                  <li key={link.key}>
                     <Link
-                      href={link.href}
+                      href={path(link.key, lang)}
                       className="text-sm text-g3 transition-colors hover:text-white"
                     >
                       {link.label}
@@ -52,12 +42,9 @@ export function SiteFooter() {
               </ul>
             </nav>
 
-            <nav aria-labelledby="footer-contacto">
-              <h2
-                id="footer-contacto"
-                className="text-sm font-medium text-white"
-              >
-                Contacta con nosotros
+            <nav aria-labelledby="footer-contact">
+              <h2 id="footer-contact" className="text-sm font-medium text-white">
+                {c.contactHeading}
               </h2>
               <ul className="mt-5 space-y-3">
                 <li>
@@ -70,28 +57,21 @@ export function SiteFooter() {
                 </li>
                 <li>
                   <Link
-                    href="/contacta"
+                    href={path("contact", lang)}
                     className="text-sm text-g3 transition-colors hover:text-white"
                   >
-                    Formulario de contacto
+                    {c.contactFormLabel}
                   </Link>
                 </li>
               </ul>
             </nav>
 
-            <div>
-              <h2 className="text-sm font-medium text-white">Idioma</h2>
-              <ul className="mt-5 space-y-3">
-                <li>
-                  <Link
-                    href="/"
-                    className="text-sm text-g3 transition-colors hover:text-white"
-                  >
-                    Español
-                  </Link>
-                </li>
-              </ul>
-            </div>
+            <nav aria-labelledby="footer-language">
+              <h2 id="footer-language" className="text-sm font-medium text-white">
+                {c.languageHeading}
+              </h2>
+              <LanguageSwitcher variant="footer" />
+            </nav>
           </div>
         </div>
       </Container>
@@ -99,20 +79,17 @@ export function SiteFooter() {
       <div className="bg-black py-11">
         <Container>
           <div className="flex flex-col items-start justify-between gap-4 text-sm text-g4 sm:flex-row sm:items-center">
-            <p>© 2025 Copyright. Nusku Cloud S.L.</p>
+            <p>{c.copyright}</p>
             <div className="flex flex-wrap gap-x-6 gap-y-2">
-              <Link
-                href="/terminos-y-condiciones"
-                className="transition-colors hover:text-white"
-              >
-                Términos y condiciones
-              </Link>
-              <Link
-                href="/politica-de-privacidad"
-                className="transition-colors hover:text-white"
-              >
-                Política de privacidad
-              </Link>
+              {c.legalLinks.map((link) => (
+                <Link
+                  key={link.key}
+                  href={path(link.key, lang)}
+                  className="transition-colors hover:text-white"
+                >
+                  {link.label}
+                </Link>
+              ))}
             </div>
           </div>
         </Container>

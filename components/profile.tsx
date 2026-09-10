@@ -1,4 +1,6 @@
 import Image from "next/image";
+import { getContent } from "@/lib/content";
+import { path, type Lang } from "@/lib/i18n";
 import {
   Button,
   Container,
@@ -19,21 +21,23 @@ export type ProfileCard = {
 };
 
 export function ProfileHero({
+  lang,
   badge,
   title,
   body,
   visual,
   visualAlt,
   visualClassName = "",
-  ctaLabel = "Programa una demo",
+  ctaLabel,
 }: {
+  lang: Lang;
   badge: string;
   title: string;
   body: string;
   visual: string;
   visualAlt: string;
   visualClassName?: string;
-  ctaLabel?: string;
+  ctaLabel: string;
 }) {
   return (
     <section className="relative overflow-hidden pt-40 pb-20 md:pt-48 md:pb-[110px]">
@@ -43,7 +47,7 @@ export function ProfileHero({
             <TitleBadge>{badge}</TitleBadge>
             <Display1>{title}</Display1>
             <p className="text-lg text-body">{body}</p>
-            <Button href="/contacta" className="mt-2">
+            <Button href={path("contact", lang)} className="mt-2">
               {ctaLabel}
             </Button>
           </div>
@@ -64,7 +68,13 @@ export function ProfileHero({
   );
 }
 
-function ProfileFeatureCard({ card }: { card: ProfileCard }) {
+function ProfileFeatureCard({
+  card,
+  lang,
+}: {
+  card: ProfileCard;
+  lang: Lang;
+}) {
   return (
     <article className="flex flex-col overflow-hidden rounded-2xl bg-surface">
       <Image
@@ -78,7 +88,7 @@ function ProfileFeatureCard({ card }: { card: ProfileCard }) {
       <div className="flex flex-col items-start gap-4 p-8">
         <div className="flex flex-wrap items-center gap-4">
           <Display4>{card.title}</Display4>
-          {card.soon ? <SoonBadge /> : null}
+          {card.soon ? <SoonBadge lang={lang} /> : null}
         </div>
         <p className="text-body">{card.body}</p>
       </div>
@@ -87,15 +97,17 @@ function ProfileFeatureCard({ card }: { card: ProfileCard }) {
 }
 
 export function ProfileSection({
+  lang,
   badge,
   title,
   body,
   cards,
 }: {
+  lang: Lang;
   badge?: string;
   title?: string;
   body?: string;
-  cards: ProfileCard[];
+  cards: readonly ProfileCard[];
 }) {
   return (
     <Section>
@@ -110,7 +122,7 @@ export function ProfileSection({
 
         <div className={`grid gap-10 sm:grid-cols-2 ${title ? "mt-16" : ""}`}>
           {cards.map((card) => (
-            <ProfileFeatureCard key={card.title} card={card} />
+            <ProfileFeatureCard key={card.title} card={card} lang={lang} />
           ))}
         </div>
       </Container>
@@ -118,28 +130,26 @@ export function ProfileSection({
   );
 }
 
-/** Closing highlight used on /instaladores-y-mantenedores and /receptoras. */
-export function AiHighlightSection() {
+/** Closing highlight used on the installers and alarm-receiving-centre pages. */
+export function AiHighlightSection({ lang }: { lang: Lang }) {
+  const c = getContent(lang).aiHighlight;
+
   return (
     <Section className="!pt-0">
       <Container>
         <div className="ring-hairline relative overflow-hidden rounded-2xl bg-surface">
           <Image
             src="/images/ilus-a3-5.avif"
-            alt="Operaciones automatizadas por la inteligencia artificial de Nusku"
+            alt={c.alt}
             width={1290}
             height={778}
             sizes="(max-width: 1024px) 100vw, 50vw"
             className="h-auto w-full lg:absolute lg:top-0 lg:right-0 lg:w-1/2"
           />
           <div className="flex flex-col items-start gap-5 px-10 py-14 lg:w-1/2 lg:px-14 lg:py-20">
-            <SoonBadge />
-            <Display2 as="h3">Operaciones automatizadas por la I.A.</Display2>
-            <p className="text-lg text-body">
-              Nusku es la única plataforma para gestión de instalaciones de
-              detección de incendios que incorpora la I.A. y te ahorra horas de
-              instalación y gestión.
-            </p>
+            <SoonBadge lang={lang} />
+            <Display2 as="h3">{c.title}</Display2>
+            <p className="text-lg text-body">{c.body}</p>
           </div>
         </div>
       </Container>
@@ -147,23 +157,21 @@ export function AiHighlightSection() {
   );
 }
 
-/** Wide "Planimetría de emergencias" block used on /propietarios. */
-export function PlanimetriaSection() {
+/** Wide "Planimetría de emergencias" block used on the owners page. */
+export function PlanimetriaSection({ lang }: { lang: Lang }) {
+  const c = getContent(lang).planimetria;
+
   return (
     <Section className="!pt-0">
       <Container>
         <div className="grid items-center gap-10 overflow-hidden rounded-2xl bg-[#c2e8ff0a] shadow-[inset_0_0_0_1px_#c1d6ff1a] lg:grid-cols-2">
           <div className="flex flex-col items-start gap-5 p-10 lg:p-14">
-            <Display2 as="h3">Planimetría de emergencias</Display2>
-            <p className="text-lg text-body">
-              Es posible consultar en la plataforma lo que está pasando en cada
-              dispositivo que está instalado y diferenciar la tipología del
-              mismo y en que estado se encuentra.
-            </p>
+            <Display2 as="h3">{c.title}</Display2>
+            <p className="text-lg text-body">{c.body}</p>
           </div>
           <Image
             src="/images/c1-05.avif"
-            alt="Planimetría de emergencias mostrando el estado de cada dispositivo"
+            alt={c.alt}
             width={900}
             height={700}
             sizes="(max-width: 1024px) 100vw, 700px"
