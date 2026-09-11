@@ -1,0 +1,10 @@
+# Normalise line endings on the way into the repository. Without this, editing
+# a file from a tool that writes LF on Windows rewrites every line as a change
+# and buries a real one-line diff in hundreds of phantom ones.
+* text=auto eol=lf
+
+# Binary assets: never touch these.
+*.avif binary
+*.png  binary
+*.jpg  binary
+*.ico  binary
