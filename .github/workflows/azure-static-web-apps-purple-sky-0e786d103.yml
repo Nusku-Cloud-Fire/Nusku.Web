@@ -23,6 +23,12 @@ jobs:
         with:
           node-version: '22'
           cache: npm
+      # Fail the run before anything is deployed rather than shipping a build
+      # with type errors: `next build` does not fail on them in this config.
+      # These deps are only for the check — the deploy builds on its own.
+      - run: npm ci
+      - run: npm run typecheck
+
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
