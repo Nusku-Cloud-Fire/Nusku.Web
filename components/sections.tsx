@@ -103,10 +103,9 @@ const cloudFeatures = [
     icon: "/images/shield-03.svg",
     label: "Más altos estándares de la industria en seguridad y fiabilidad",
   },
-  // NOTE: the live Webflow site repeats the first label here. Kept verbatim.
   {
     icon: "/images/data.svg",
-    label: "Arquitectura distribuida con escalabilidad sin límites",
+    label: "Tus datos cifrados y replicados, siempre disponibles",
   },
 ];
 

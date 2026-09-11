@@ -99,7 +99,9 @@ export function SiteFooter() {
       <div className="bg-black py-11">
         <Container>
           <div className="flex flex-col items-start justify-between gap-4 text-sm text-g4 sm:flex-row sm:items-center">
-            <p>© 2025 Copyright. Nusku Cloud S.L.</p>
+            {/* Derived from the build date so it does not go stale again:
+                every page here is prerendered, so it updates on each deploy. */}
+            <p>© {new Date().getFullYear()} Copyright. Nusku Cloud S.L.</p>
             <div className="flex flex-wrap gap-x-6 gap-y-2">
               <Link
                 href="/terminos-y-condiciones"
