@@ -1,12 +1,6 @@
 {
   "$schema": "https://json.schemastore.org/staticwebapp.config.json",
   "trailingSlash": "never",
-  "globalHeaders": {
-    "X-Content-Type-Options": "nosniff",
-    "X-Frame-Options": "SAMEORIGIN",
-    "Referrer-Policy": "strict-origin-when-cross-origin",
-    "Strict-Transport-Security": "max-age=63072000; includeSubDomains; preload"
-  },
   "routes": [
     {
       "route": "/images/*",
@@ -16,8 +10,12 @@
     },
     {
       "route": "/api/contact",
-      "methods": ["POST"],
-      "allowedRoles": ["anonymous"]
+      "methods": [
+        "POST"
+      ],
+      "allowedRoles": [
+        "anonymous"
+      ]
     }
   ],
   "mimeTypes": {

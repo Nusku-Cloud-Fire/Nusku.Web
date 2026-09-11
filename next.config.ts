@@ -14,6 +14,21 @@ const nextConfig: NextConfig = {
   // A stray package-lock.json in the home directory makes Next infer the wrong
   // workspace root, which breaks file tracing on deploy. Pin it to this repo.
   outputFileTracingRoot: path.join(__dirname),
+  // In a hybrid deploy Next serves the pages itself, so the `globalHeaders` in
+  // staticwebapp.config.json never reach them — verified against the deployed
+  // site. Setting them here is what actually applies them.
+  async headers() {
+    return [
+      {
+        source: "/:path*",
+        headers: [
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          { key: "X-Frame-Options", value: "SAMEORIGIN" },
+          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+        ],
+      },
+    ];
+  },
   async redirects() {
     return [
       // Legacy Webflow path referenced from the privacy policy.
