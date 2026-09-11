@@ -15,10 +15,14 @@ jobs:
     runs-on: ubuntu-latest
     name: Build and Deploy Job
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: true
           lfs: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
@@ -30,8 +34,19 @@ jobs:
           # For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig
           app_location: "/" # App source code path
           api_location: "" # Api source code path - optional
-          output_location: "build" # Built app content directory - optional
+          # Next.js is detected and handled by the SWA build (Oryx), which knows
+          # about .next itself. The CRA-style "build" default made the deploy
+          # fail with "failed to produce artifact folder: 'build'"; an explicit
+          # ".next" fails the same way. Empty is the correct value for Next.
+          output_location: "" # Built app content directory - optional
           ###### End of Repository/Build Configurations ######
+        env:
+          # Read at request time by app/api/contact/route.ts. Until these repo
+          # secrets exist the contact form shows its "escríbenos a
+          # info@nusku.cloud" fallback; everything else works.
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          CONTACT_TO_EMAIL: ${{ secrets.CONTACT_TO_EMAIL }}
+          CONTACT_FROM_EMAIL: ${{ secrets.CONTACT_FROM_EMAIL }}
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
