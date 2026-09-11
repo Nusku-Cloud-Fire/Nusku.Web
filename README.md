@@ -62,9 +62,9 @@ silently dropped.
 3. **Create an API key** at [resend.com/api-keys](https://resend.com/api-keys).
    *Sending access* is the only permission needed. Copy it once — Resend shows
    the full key only at creation.
-4. **Set the three variables** (see the table below) in the hosting provider.
-   On Vercel: *Project → Settings → Environment Variables*, added to
-   **Production** (and Preview, if the form should work on preview URLs).
+4. **Set the three variables** (see the table below) as repository secrets in
+   GitHub: *Settings → Secrets and variables → Actions → New repository
+   secret*. The deploy workflow already passes all three through to the build.
 5. **Redeploy.** Environment variables are read at request time, but a running
    deployment does not pick up new values until it is redeployed.
 6. **Test** by submitting the real form at `/contacta` and confirming the email
@@ -94,12 +94,45 @@ replying from the inbox goes straight back to them.
 ### If the form reports an error
 
 The form shows its fallback message whenever the API route returns a non-200.
-The server logs (Vercel → *Logs*) say which case it was:
+The server logs (Azure portal → the Static Web App → *Monitoring*) say which
+case it was:
 
 - `RESEND_API_KEY is not set` — step 3/4 not done, or the deploy predates them.
 - `Resend responded 403` — usually the domain in `CONTACT_FROM_EMAIL` is not
   verified, or does not match the domain from step 2.
 - `could not reach Resend` — network failure calling the Resend API.
+
+## Deployment
+
+The site runs on **Azure Static Web Apps** (`purple-sky-0e786d103`), deployed by
+`.github/workflows/azure-static-web-apps-purple-sky-0e786d103.yml` on every push
+to `main`. Pull requests get their own staging environment, torn down on close.
+The workflow runs `npm run typecheck` first and fails the run before deploying
+if it does not pass.
+
+Three things about this host are worth knowing before changing the config, each
+of which broke a deploy once:
+
+- **`output_location` must be empty**, not `.next`. The workflow Azure generates
+  defaults to `build` (the Create React App convention); Next emits `.next`, so
+  the deploy failed with *"failed to produce artifact folder: 'build'"* even
+  though `next build` had succeeded. The SWA build detects Next and handles the
+  directory itself, and an explicit `.next` fails the same way.
+- **`images.unoptimized` is required** (set in `next.config.ts`). SWA has no
+  `next/image` optimizer — `/_next/image` returns 404 — so without it every
+  image on the site breaks. It costs almost nothing here: 32 of the 51 assets
+  are already AVIF and 14 are SVG.
+- **`globalHeaders` in `staticwebapp.config.json` does not apply** to pages Next
+  serves, which is all of them. The security headers therefore live in
+  `next.config.ts`. Path-scoped `routes` entries *do* work, which is why the
+  immutable caching on `/images` stays in the SWA config.
+
+### DNS
+
+`nusku.cloud` is managed at Piensa Solutions, and mail already runs on Microsoft
+365. When adding the Resend verification records, **merge the SPF into the
+single existing TXT record** — a second, separate SPF record invalidates both
+and takes the company mail down with it.
 
 ## Design system
 
