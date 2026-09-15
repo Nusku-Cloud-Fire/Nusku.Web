@@ -122,11 +122,18 @@ silently dropped.
 3. **Create an API key** at [resend.com/api-keys](https://resend.com/api-keys).
    *Sending access* is the only permission needed. Copy it once — Resend shows
    the full key only at creation.
-4. **Set the three variables** (see the table below) as repository secrets in
-   GitHub: *Settings → Secrets and variables → Actions → New repository
-   secret*. The deploy workflow already passes all three through to the build.
-5. **Redeploy.** Environment variables are read at request time, but a running
-   deployment does not pick up new values until it is redeployed.
+4. **Set the three variables** (see the table below) as **application settings
+   on the Static Web App**, not as GitHub secrets. The route reads them at
+   request time on Azure, so a GitHub secret — which only exists during the
+   build — leaves it seeing them unset and returning `not_configured`:
+
+   ```bash
+   az staticwebapp appsettings set      --name nusku-marketing-web --resource-group rg-nusku-marketing-web      --setting-names RESEND_API_KEY=re_xxx CONTACT_TO_EMAIL=info@nusku.cloud                      CONTACT_FROM_EMAIL=web@nusku.cloud
+   ```
+
+   Or in the portal: the Static Web App → *Environment variables*. They apply
+   without a redeploy.
+5. Application settings take effect on the next request — no redeploy needed.
 6. **Test** by submitting the real form at `/contacta` and confirming the email
    arrives at `CONTACT_TO_EMAIL`.
 
@@ -164,7 +171,8 @@ The form shows its fallback message whenever the API route returns a non-200.
 The server logs (Azure portal → the Static Web App → *Monitoring*) say which
 case it was:
 
-- `RESEND_API_KEY is not set` — step 3/4 not done, or the deploy predates them.
+- `RESEND_API_KEY is not set` (the form gets `not_configured`) — step 4 not done,
+  or the variables were set as GitHub secrets instead of application settings.
 - `Resend responded 403` — usually the domain in `CONTACT_FROM_EMAIL` is not
   verified, or does not match the domain from step 2.
 - `could not reach Resend` — network failure calling the Resend API.
@@ -193,6 +201,11 @@ of which broke a deploy once:
   serves, which is all of them. The security headers therefore live in
   `next.config.ts`. Path-scoped `routes` entries *do* work, which is why the
   immutable caching on `/images` stays in the SWA config.
+
+- **Runtime variables are application settings, not GitHub secrets.** The
+  workflow's `env:` only reaches the build; `/api/contact` runs on Azure and
+  reads `process.env` per request, so a secret passed through the workflow
+  leaves it returning `not_configured`. See "Contact form".
 
 ### DNS
 

@@ -47,13 +47,11 @@ jobs:
           # ".next" fails the same way. Empty is the correct value for Next.
           output_location: "" # Built app content directory - optional
           ###### End of Repository/Build Configurations ######
-        env:
-          # Read at request time by app/api/contact/route.ts. Until these repo
-          # secrets exist the contact form shows its "escríbenos a
-          # info@nusku.cloud" fallback; everything else works.
-          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
-          CONTACT_TO_EMAIL: ${{ secrets.CONTACT_TO_EMAIL }}
-          CONTACT_FROM_EMAIL: ${{ secrets.CONTACT_FROM_EMAIL }}
+        # No env: block for the Resend variables on purpose. They are read at
+        # request time by app/api/contact/route.ts, which runs on Azure, not in
+        # this runner — passing them here only puts them in the build and the
+        # route still sees them unset. They belong in the Static Web App's own
+        # application settings; see "Contact form" in README.md.
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
