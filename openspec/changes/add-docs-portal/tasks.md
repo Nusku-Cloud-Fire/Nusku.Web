@@ -2,12 +2,12 @@
 
 ## 1. Contenido y registro
 
-- [ ] 1.1 Mover el metadato del prototipo `lib/docs/sia-codigos-eventos.ts` a `content/docs/pages/sia-codigos-eventos.json` (`id` = slug `sia-codigos-eventos`, `title`, `summary`, `changelog`) y dejar en TS solo los datos de la tabla; verificar que la página muestra el mismo título e historial que antes
-- [ ] 1.2 Crear el índice tipado de páginas (`lib/docs/pages.ts`: slug → metadato JSON + componente de cuerpo) y la ruta dinámica `app/(es)/documentacion/[slug]/page.tsx` que sustituye a la ruta fija del prototipo; verificar que `/documentacion/sia-codigos-eventos` se ve igual y que `/documentacion/no-existe` da el 404 en español
-- [ ] 1.3 Ordenar el historial del más reciente al más antiguo en `components/pages/doc-page.tsx`; verificar con una segunda entrada de prueba que aparece arriba (y quitarla)
-- [ ] 1.4 Crear `content/docs/consumers.json` con el formato de D2 (vacío o con un consumidor de prueba) y `lib/docs/registry.ts` con `canView(email, pageId)` y `pagesFor(email)` (normalizando trim + minúsculas, con `@nusku.cloud` viendo todo); verificar con `npm run typecheck`
-- [ ] 1.5 Escribir `scripts/docs-check.mjs` (sin dependencias) que valide ids de página existentes, emails bien formados e ids de consumidor únicos, y añadir `npm run docs:check`; verificar que pasa con el registro real y falla con un id de página erróneo
-- [ ] 1.6 Añadir `npm run docs:check` al workflow antes del despliegue, junto al typecheck; verificar leyendo el YAML que va en el mismo job y antes de `Build And Deploy`
+- [x] 1.1 Mover el metadato del prototipo `lib/docs/sia-codigos-eventos.ts` a `content/docs/pages/sia-codigos-eventos.json` (`id` = slug `sia-codigos-eventos`, `title`, `summary`, `changelog`) y dejar en TS solo los datos de la tabla; verificar que la página muestra el mismo título e historial que antes
+- [x] 1.2 Crear el índice tipado de páginas (`lib/docs/pages.ts`: slug → metadato JSON + componente de cuerpo) y la ruta dinámica `app/(es)/documentacion/[slug]/page.tsx` que sustituye a la ruta fija del prototipo; verificar que `/documentacion/sia-codigos-eventos` se ve igual y que `/documentacion/no-existe` da el 404 en español
+- [x] 1.3 Ordenar el historial del más reciente al más antiguo en `components/pages/doc-page.tsx`; verificar con una segunda entrada de prueba que aparece arriba (y quitarla)
+- [x] 1.4 Crear `content/docs/consumers.json` con el formato de D2 (vacío o con un consumidor de prueba) y `lib/docs/registry.ts` con `canView(email, pageId)` y `pagesFor(email)` (normalizando trim + minúsculas, con `@nusku.cloud` viendo todo); verificar con `npm run typecheck`
+- [x] 1.5 Escribir `scripts/docs-check.mjs` (sin dependencias) que valide ids de página existentes, emails bien formados e ids de consumidor únicos, y añadir `npm run docs:check`; verificar que pasa con el registro real y falla con un id de página erróneo
+- [x] 1.6 Añadir `npm run docs:check` al workflow antes del despliegue, junto al typecheck; verificar leyendo el YAML que va en el mismo job y antes de `Build And Deploy`
 
 ## 2. Acceso
 

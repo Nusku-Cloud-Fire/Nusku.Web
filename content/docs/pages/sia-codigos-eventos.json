@@ -1,0 +1,11 @@
+{
+  "id": "sia-codigos-eventos",
+  "title": "Eventos SIA DC-09 enviados a la CRI",
+  "summary": "El panel envía sus eventos a la nube Nusku, que los traduce a SIA DC-09 y los transmite a la receptora.",
+  "changelog": [
+    {
+      "date": "2026-10-06",
+      "note": "Versión inicial: 11 eventos (2 alarmas, 4 averías, 5 de plataforma)."
+    }
+  ]
+}

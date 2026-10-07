@@ -29,6 +29,8 @@ jobs:
       # These deps are only for the check — the deploy builds on its own.
       - run: npm ci
       - run: npm run typecheck
+      # Fails on a broken docs page or consumer registry, so it can't ship.
+      - run: npm run docs:check
 
       - name: Build And Deploy
         id: builddeploy

@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import type { DocPage } from "@/lib/docs/sia-codigos-eventos";
+import type { DocPageMeta } from "@/lib/docs/types";
 import { Container, TitleBadge } from "@/components/ui";
 
 const dateFormat = new Intl.DateTimeFormat("es-ES", {
@@ -18,10 +18,12 @@ export function DocPageLayout({
   page,
   children,
 }: {
-  page: DocPage;
+  page: DocPageMeta;
   children: ReactNode;
 }) {
-  const latest = page.changelog[0];
+  // Newest first, whatever the order in the JSON.
+  const entries = [...page.changelog].sort((a, b) => b.date.localeCompare(a.date));
+  const latest = entries[0];
 
   return (
     <div className="bg-g6 bg-[radial-gradient(1200px_600px_at_50%_-10%,#1976e426,#1976e400_60%)] pt-[82px]">
@@ -53,7 +55,7 @@ export function DocPageLayout({
             Historial de cambios
           </h2>
           <ol className="ring-hairline flex flex-col rounded-lg bg-surface">
-            {page.changelog.map((entry) => (
+            {entries.map((entry) => (
               <li
                 key={`${entry.date}-${entry.note}`}
                 className="flex flex-col gap-1 border-b border-white/[0.05] px-5 py-4 last:border-0 md:flex-row md:gap-6"
