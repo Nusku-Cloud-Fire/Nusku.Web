@@ -177,6 +177,100 @@ case it was:
   verified, or does not match the domain from step 2.
 - `could not reach Resend` — network failure calling the Resend API.
 
+## Private documentation
+
+`/documentacion` is a private area for partners (monitoring stations, installers)
+with technical pages such as the SIA event codes. Visitors sign in with their
+email: the site sends a login link (valid 15 minutes) and then sets a 7-day
+session cookie. There are no passwords or accounts, and nothing is stored
+server-side. The pages are not indexed (`noindex` plus `robots.txt`).
+
+**Granting or removing access** means editing `content/docs/consumers.json` in a
+pull request: each consumer lists its `contacts` (emails) and the `pages` it may
+see. `npm run docs:check` validates the registry and runs in CI. Removing
+someone takes effect on the next deploy, even if they still hold a cookie, since
+the registry is checked on every request. Any `@nusku.cloud` email can sign in
+and sees every page without being listed.
+
+**Configuration.** The variables are application settings on the Static Web App,
+set the same way as the Resend ones for the contact form (not GitHub secrets).
+Login emails reuse `RESEND_API_KEY`. See `.env.example` for each one.
+
+```bash
+az staticwebapp appsettings set --name nusku-marketing-web --resource-group rg-nusku-marketing-web --setting-names DOCS_AUTH_SECRET="$(openssl rand -base64 48)" DOCS_FROM_EMAIL=docs@nusku.cloud
+```
+
+Without `DOCS_AUTH_SECRET` (at least 32 bytes), or without `RESEND_API_KEY` in
+production, the area shows "access not available" and lets nobody in. In local
+development, with no `RESEND_API_KEY`, the login link is printed in the `next
+dev` console instead of being emailed.
+
+Login links point at `SITE_URL` when set, otherwise at `https://www.nusku.cloud`
+in production (request host headers are never trusted there, since a forged one
+would put a valid token in a link to another domain). Locally they use the
+request host.
+
+**Auditing.** Logins show up in the Azure logs as `[docs] login ok <email>
+<timestamp>`; page views are deliberately not logged. Access grants are the
+history of the registry: `git log -p content/docs/consumers.json`.
+
+**Limitations.** Links are not single-use, so one can be reused until it expires
+(15 minutes). There is no per-session revocation: to sign everyone out, rotate
+`DOCS_AUTH_SECRET`.
+
+### Change notifications
+
+An explicit change is a new entry in a page's `changelog`
+(`content/docs/pages/<id>.json`). Editing a page without adding an entry
+notifies nobody, so fix typos freely. Rewriting the `note` of an existing entry
+counts as a new entry and notifies again, so correct notes before merging.
+
+Contacts get one email per deployment: if a push adds entries to several pages
+they can see, they receive a single email listing all of them. Recipients are
+the `contacts` of every consumer in `content/docs/consumers.json` that has the
+page in `pages`; `@nusku.cloud` members who are not in the registry are never
+notified.
+
+The `notify_docs_changes` job in the Azure workflow runs
+`scripts/docs-notify.mjs` only after `build_and_deploy_job` succeeds, and only on
+pushes to `main`. It never runs on pull requests or manual runs. It compares
+`github.event.before` with `github.sha`, so git is the only state: nothing
+records who was already notified.
+
+| Name | Kind | Purpose |
+| --- | --- | --- |
+| `RESEND_API_KEY` | GitHub secret | Resend key used by the job |
+| `DOCS_FROM_EMAIL` | GitHub repo variable | Sender address (default `docs@nusku.cloud`) |
+| `SITE_URL` | GitHub repo variable | Base URL of the links (default `https://www.nusku.cloud`) |
+
+This differs from the contact form on purpose: `/api/contact` reads its
+variables at request time on Azure, so they are application settings, while
+this email is sent from the GitHub runner, so it needs GitHub secrets.
+
+If the job fails (missing key or a Resend error), it lists the contacts that
+did not receive the notice and the deployment is not rolled back. Re-run the
+job from the Actions tab. Each email carries an `Idempotency-Key`
+(`docs-<sha>-<email>`), so the ones that already went out are not duplicated.
+
+To test locally without sending anything, from the repo root:
+
+```bash
+node scripts/docs-notify.mjs <before> <after> --dry-run
+```
+
+### Keeping docs in sync with the backend (`@docs-sync`)
+
+A `@docs-sync: <page-id>` comment in the backend marks the code that feeds a
+docs page. The backend agent warns when it edits a marked file (a rule in that
+repo's `CLAUDE.md` plus a `PostToolUse` hook, both configured there). When that
+happens, update the page here and add an entry to its `changelog` so the
+consumers are notified.
+
+Current ids:
+
+- `sia-codigos-eventos`: the SIA event catalog (`HardcodedSiaEventCodeCatalog` /
+  `FromConfigSiaEventCodeCatalog` in EventInjestion).
+
 ## Deployment
 
 The site runs on **Azure Static Web Apps** (`purple-sky-0e786d103`), deployed by

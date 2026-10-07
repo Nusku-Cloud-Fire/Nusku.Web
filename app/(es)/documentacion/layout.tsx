@@ -1,4 +1,7 @@
+import type { Metadata } from "next";
 import type { ReactNode } from "react";
+
+export const metadata: Metadata = { robots: { index: false, follow: false } };
 
 /**
  * Same sticky header treatment as /recursos: pull the page up so its
