@@ -22,8 +22,8 @@
 
 ## 3. Avisos de cambios
 
-- [ ] 3.1 Escribir `scripts/docs-notify.mjs <before> <after>` (sin dependencias): detectar entradas nuevas por `(date, note)` con `git show`, agrupar por contacto, un email por contacto vía Resend, error con la lista de pendientes si falla o falta la clave, sin avisos si `before` es nulo. Incluir `--dry-run`. Verificar en local con `--dry-run` contra dos commits de prueba: una entrada nueva, una errata sin entrada y dos páginas para el mismo contacto
-- [ ] 3.2 Añadir al workflow de Azure el job `notify_docs_changes` (`needs: build_and_deploy_job`, solo con `github.event_name == 'push'`, `fetch-depth: 0`, secrets `RESEND_API_KEY` y variables `DOCS_FROM_EMAIL` y `SITE_URL`); verificar leyendo el YAML que no se ejecuta en PRs ni en ejecuciones manuales
+- [x] 3.1 Escribir `scripts/docs-notify.mjs <before> <after>` (sin dependencias): detectar entradas nuevas por `(date, note)` con `git show`, agrupar por contacto, un email por contacto vía Resend, error con la lista de pendientes si falla o falta la clave, sin avisos si `before` es nulo. Incluir `--dry-run`. Verificar en local con `--dry-run` contra dos commits de prueba: una entrada nueva, una errata sin entrada y dos páginas para el mismo contacto
+- [x] 3.2 Añadir al workflow de Azure el job `notify_docs_changes` (`needs: build_and_deploy_job`, solo con `github.event_name == 'push'`, `fetch-depth: 0`, secrets `RESEND_API_KEY` y variables `DOCS_FROM_EMAIL` y `SITE_URL`); verificar leyendo el YAML que no se ejecuta en PRs ni en ejecuciones manuales
 - [ ] 3.3 Documentar en README el flujo "cambio explícito = entrada en el changelog", que aquí `RESEND_API_KEY` sí va como secret de GitHub (el envío es en el runner) y cómo reenviar avisos relanzando el job; verificar que la sección enlaza desde "Deployment"
 - [ ] 3.4 Documentar en README la convención `@docs-sync: <id-de-página>` para el backend, con los ids actuales; verificar que el id documentado coincide con el de `content/docs/pages/`
 
