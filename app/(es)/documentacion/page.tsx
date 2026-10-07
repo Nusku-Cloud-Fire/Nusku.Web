@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { DocsShell, DocsUnavailable, SessionBar } from "@/components/docs/session-bar";
+import { DocsShell, DocsUnavailable } from "@/components/docs/session-bar";
 import { lastUpdated } from "@/lib/docs/meta";
 import { pagesFor } from "@/lib/docs/registry";
 import { docsAccess } from "@/lib/docs/session";
@@ -21,8 +21,7 @@ export default async function Page() {
   const pages = pagesFor(access.email);
 
   return (
-    <DocsShell title="Documentación">
-      <SessionBar email={access.email} />
+    <DocsShell title="Tu documentación">
       {pages.length === 0 ? (
         <p className="text-lg">Todavía no tienes documentación asignada.</p>
       ) : (

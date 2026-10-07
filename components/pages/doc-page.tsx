@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { ReactNode } from "react";
 import type { DocPageMeta } from "@/lib/docs/types";
 import { Container, TitleBadge } from "@/components/ui";
@@ -29,6 +30,12 @@ export function DocPageLayout({
     <div className="bg-g6 bg-[radial-gradient(1200px_600px_at_50%_-10%,#1976e426,#1976e400_60%)] pt-[82px]">
       <Container className="flex flex-col gap-12 pt-10 pb-24 md:pt-16">
         <header className="flex max-w-4xl flex-col items-start gap-5">
+          <Link
+            href="/documentacion"
+            className="text-sm text-detail transition-colors hover:text-white"
+          >
+            ← Toda la documentación
+          </Link>
           <TitleBadge>Documentación</TitleBadge>
           <h1 className="display-gradient pb-[11px] text-[35px] leading-none font-semibold md:text-[50px]">
             {page.title}

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { DocsForbidden, DocsUnavailable, SessionBar } from "@/components/docs/session-bar";
+import { DocsForbidden, DocsUnavailable } from "@/components/docs/session-bar";
 import { DocPageLayout } from "@/components/pages/doc-page";
 import { getDocPage } from "@/lib/docs/pages";
 import { docsAccess } from "@/lib/docs/session";
@@ -27,7 +27,6 @@ export default async function Page({ params }: Props) {
   return (
     <DocPageLayout page={meta}>
       <Body />
-      <SessionBar email={access.email} />
     </DocPageLayout>
   );
 }

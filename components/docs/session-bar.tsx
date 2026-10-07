@@ -18,18 +18,31 @@ export function DocsShell({ title, children }: { title: string; children: ReactN
   );
 }
 
-/** "Has entrado como x" plus a POST logout (a GET could be triggered by prefetch). */
-export function SessionBar({ email }: { email: string }) {
+/**
+ * Email + logout, laid over the right end of the site header. The header lives
+ * in the root layout and is a client component, so it can't read the httpOnly
+ * session; this overlay mirrors its padding and Container so it lines up with
+ * the logo, and is rendered server-side by the /documentacion layout.
+ * Logout is a POST: a GET could be triggered by prefetch.
+ */
+export function HeaderSession({ email }: { email: string }) {
   return (
-    <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-detail">
-      <span>
-        Has entrado como <span className="text-body">{email}</span>
-      </span>
-      <form method="post" action="/api/docs/logout">
-        <button type="submit" className="underline transition-colors hover:text-white">
-          Cerrar sesión
-        </button>
-      </form>
+    <div className="pointer-events-none fixed inset-x-0 top-0 z-[60] py-[25px]">
+      <Container className="flex h-8 items-center justify-end">
+        <div className="pointer-events-auto flex min-w-0 items-center gap-3 text-sm">
+          <span className="hidden min-w-0 truncate text-body sm:block" title={email}>
+            {email}
+          </span>
+          <form method="post" action="/api/docs/logout" className="shrink-0">
+            <button
+              type="submit"
+              className="ring-hairline rounded-md bg-white/5 px-3 py-1.5 text-white transition-colors hover:bg-white/10"
+            >
+              Cerrar sesión
+            </button>
+          </form>
+        </div>
+      </Container>
     </div>
   );
 }
@@ -60,7 +73,10 @@ export function DocsForbidden({ email }: { email: string }) {
     <DocsShell title="Documentación">
       <DocsNotice>
         <p className="text-xl font-medium text-white">No tienes acceso a esta página</p>
-        <SessionBar email={email} />
+        <p>
+          Has entrado como <span className="text-white">{email}</span>. Si crees que
+          deberías verla, escríbenos a info@nusku.cloud.
+        </p>
         <a href="/documentacion" className="w-fit text-blue-plus underline">
           Volver al índice
         </a>
