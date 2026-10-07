@@ -5,7 +5,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: "*",
       allow: "/",
-      disallow: ["/recursos/calculadora"],
+      disallow: ["/recursos/calculadora", "/documentacion"],
     },
     sitemap: "https://www.nusku.cloud/sitemap.xml",
   };
