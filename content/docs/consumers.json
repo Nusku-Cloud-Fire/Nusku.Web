@@ -4,5 +4,17 @@
     "name": "Lumicore (pruebas)",
     "contacts": ["dev@lumicore.cloud"],
     "pages": ["sia-codigos-eventos"]
+  },
+  {
+    "id": "seguridad-a1",
+    "name": "SBN > Seguridad A1 > Eva Martínez",
+    "contacts": ["evamartinez@seguridadea1.com"],
+    "pages": ["sia-codigos-eventos"]
+  },
+  {
+    "id": "quantum-soc",
+    "name": "SBN > Quantum SOC > Blanca Castillo",
+    "contacts": ["blanca.castillo@quantumsoc.es"],
+    "pages": ["sia-codigos-eventos"]
   }
 ]
