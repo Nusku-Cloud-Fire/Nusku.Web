@@ -29,6 +29,8 @@ jobs:
       # These deps are only for the check — the deploy builds on its own.
       - run: npm ci
       - run: npm run typecheck
+      # Fails on a broken docs page or consumer registry, so it can't ship.
+      - run: npm run docs:check
 
       - name: Build And Deploy
         id: builddeploy
@@ -52,6 +54,30 @@ jobs:
         # this runner — passing them here only puts them in the build and the
         # route still sees them unset. They belong in the Static Web App's own
         # application settings; see "Contact form" in README.md.
+
+  # Emails the consumer contacts about new docs changelog entries. Unlike
+  # /api/contact, the send happens here in the runner, so RESEND_API_KEY is a
+  # GitHub secret rather than an Azure application setting. It lives in this
+  # workflow (not a separate paths-triggered one) so it only runs once the
+  # deploy has succeeded.
+  notify_docs_changes:
+    needs: build_and_deploy_job
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    name: Notify Docs Changes
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Send docs change notifications
+        run: node scripts/docs-notify.mjs "${{ github.event.before }}" "${{ github.sha }}"
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          DOCS_FROM_EMAIL: ${{ vars.DOCS_FROM_EMAIL }}
+          SITE_URL: ${{ vars.SITE_URL }}
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'

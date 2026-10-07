@@ -30,13 +30,14 @@ export function SiteHeader({
   lang: Lang;
   labels: HeaderLabels;
   nav: { key: RouteKey; label: string }[];
-  /** Logo only — no nav, demo CTA, or language switcher. Auto on /recursos/*. */
+  /** Logo only — no nav, demo CTA, or language switcher. Auto on /recursos/* and /documentacion/*. */
   minimal?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
-  // SiteShell owns the header; detect /recursos/* for sticky + minimal chrome.
-  const isRecursos = pathname.startsWith("/recursos");
+  // SiteShell owns the header; detect internal tool pages for sticky + minimal chrome.
+  const isRecursos =
+    pathname.startsWith("/recursos") || pathname.startsWith("/documentacion");
   const isMinimal = minimal || isRecursos;
 
   // Close the mobile menu whenever the route changes.
